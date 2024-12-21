@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Replace with your MongoDB connection URI
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/recipeApp';
@@ -17,4 +17,5 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+export default connectDB;
+

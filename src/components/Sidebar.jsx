@@ -36,6 +36,11 @@ const DesktopSidebar = () => {
 
             <span className="font-bold hidden md:block">Login</span>
           </Link>
+
+		  {/* Add "Add Yours" button */}
+		  <Link to={"/add-recipe"} className="flex gap-1">
+						<span className="font-bold hidden md:block">AddYours</span>
+					</Link>
 				</ul>
 			</div>
 		</div>
@@ -59,6 +64,10 @@ const MobileSidebar = () => {
 			<Link to={"/login"}>
         <span className="cursor-pointer">Login</span>
       </Link>
+	  {/* Add "Add Yours" button */}
+	  <Link to={"/add-recipe"}>
+				<span className="cursor-pointer">AddYours</span>
+			</Link>
 		</div>
 	);
 };
