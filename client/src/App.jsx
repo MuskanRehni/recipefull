@@ -13,7 +13,7 @@ function App() {
 				<Route path='/' element={<HomePage />} />
 				<Route path='/favorites' element={<FavoritesPage />} />
 				<Route path='/login' element={<Login />} /> {/* Add Login route */}
-				<Route path="/add-yours" element={<AddYours />} />
+				<Route path='/add-yours' element={<AddYours />} />
 			</Routes>
 		</div>
 	);

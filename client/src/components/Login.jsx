@@ -1,7 +1,31 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isLogin) {
+        const { data } = await axios.post('/api/users/login', { email, password });
+        localStorage.setItem('authToken', data.token); // Save JWT token to local storage
+        navigate('/home'); // Redirect to home page after login
+      } else {
+        await axios.post('/api/users/register', { email, password, firstName, lastName });
+        setIsLogin(true); // Switch to login form after successful signup
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.response.data.message); // Display error message
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
@@ -9,42 +33,55 @@ const Login = () => {
         <h2 className="text-3xl font-bold mb-6 text-center">
           {isLogin ? "Login" : "Signup"}
         </h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label htmlFor="email" className="block mb-2 font-medium">
-              Email
-            </label>
+            <label htmlFor="email" className="block mb-2 font-medium">Email</label>
             <input
               type="email"
               id="email"
               className="w-full p-3 border rounded"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block mb-2 font-medium">
-              Password
-            </label>
+            <label htmlFor="password" className="block mb-2 font-medium">Password</label>
             <input
               type="password"
               id="password"
               className="w-full p-3 border rounded"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           {!isLogin && (
-            <div className="mb-6">
-              <label htmlFor="confirmPassword" className="block mb-2 font-medium">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                className="w-full p-3 border rounded"
-                placeholder="Confirm your password"
-              />
-            </div>
+            <>
+              <div className="mb-6">
+                <label htmlFor="firstName" className="block mb-2 font-medium">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  className="w-full p-3 border rounded"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+              <div className="mb-6">
+                <label htmlFor="lastName" className="block mb-2 font-medium">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  className="w-full p-3 border rounded"
+                  placeholder="Enter your last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
+            </>
           )}
 
           <button

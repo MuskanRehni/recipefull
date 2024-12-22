@@ -38,7 +38,7 @@ const DesktopSidebar = () => {
           </Link>
 
 		  {/* Add "Add Yours" button */}
-		  <Link to={"/add-recipe"} className="flex gap-1">
+		  <Link to={"/add-yours"} className="flex gap-1">
 						<span className="font-bold hidden md:block">AddYours</span>
 					</Link>
 				</ul>
@@ -65,7 +65,7 @@ const MobileSidebar = () => {
         <span className="cursor-pointer">Login</span>
       </Link>
 	  {/* Add "Add Yours" button */}
-	  <Link to={"/add-recipe"}>
+	  <Link to={"/add-yours"}>
 				<span className="cursor-pointer">AddYours</span>
 			</Link>
 		</div>
