@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
  // Add `.js` extension for ES modules
 import userRoutes from './routes/userroutes.js'; // Add `.js` extension for ES modules
+import loginroutes from './routes/loginroutes.js';
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -15,7 +16,8 @@ app.use(express.json()); // Parse incoming JSON data
 connectDB();
 
 // Routes
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/users',loginroutes);
 
 // Default Route
 app.get('/', (req, res) => {
