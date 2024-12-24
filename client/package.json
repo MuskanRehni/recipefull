@@ -32,10 +32,13 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.0"
+    
   },
   "description": "![Demo App](/public/Screenshot_29.png)",
   "main": "postcss.config.js",
   "keywords": [],
   "author": "",
   "license": "ISC"
+  
+  
 }

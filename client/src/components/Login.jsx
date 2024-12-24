@@ -14,9 +14,9 @@ const Login = () => {
     e.preventDefault();
     try {
       if (isLogin) {
-        const { data } = await axios.post('http://localhost:5000/api/users/login', { email, password });
+        const data  = await axios.post('http://localhost:5000/api/users/login', { email, password });
         localStorage.setItem('authToken', data.token); // Save JWT token to local storage
-        navigate('/home'); // Redirect to home page after login
+        navigate('/'); // Redirect to home page after login
       } else {
         await axios.post('http://localhost:5000/api/users/register', { email, password, firstName, lastName });
         setIsLogin(true); // Switch to login form after successful signup
