@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate();
@@ -9,30 +10,51 @@ const ProtectedRoute = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const authToken = localStorage.getItem("authToken");
+        const verifyToken = async () => {
+            try {
+                const authToken = localStorage.getItem("authToken");
 
-        if (authToken) {
-            // Verify Tokens
-            setUser(authToken);
-            console.log("1");
-            console.log(authToken);
-        } else {
-            console.log("Null Token");
-            setUser(null);
-        }
+                if (!authToken) {
+                    setUser(null);
+                    return;
+                }
+                console.log("Called");
+
+                const verification = await axios.post(
+                    "http://localhost:5000/api/users/verifyToken",
+                    {
+                        token: authToken,
+                    }
+                );
+
+                console.log(verification);
+
+                if (verification.status == 200) {
+                    console.log("Valid");
+                    setUser(authToken);
+                } else {
+                    setUser(null);
+                }
+            } catch (error) {
+                setUser(null);
+                navigate("/login");
+            }
+        };
+
+        verifyToken();
         setLoading(false);
     }, []);
 
     // Set User is Logged in for current tab
     useEffect(() => {
         if (!loading) {
-            if (user) {
-                console.log("User");
-            } else {
+            console.log("Loading Fixi");
+            console.log(user);
+            if (!user) {
                 navigate("/login");
             }
         }
-    }, [user, loading, navigate]);
+    }, [user, navigate]);
 
     if (user) {
         return children;

@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
+import { config } from "dotenv";
+
+config();
+
 // Replace with your MongoDB connection URI
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/recipeApp';
 

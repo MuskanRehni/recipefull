@@ -43,4 +43,26 @@ router.post('/login', async (req, res) => {
   res.json({ message: 'Login successful', token });
 });
 
+router.post("/verifyToken", async (req, res) => {
+  try {
+      const { token } = req.body;
+
+      console.log("Verify Token ", token);
+
+      const validity = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (!validity) {
+          throw new Error("Token Not Valid");
+      }
+
+      res.status(200).send({
+          message: "Valid User",
+      });
+  } catch (error) {
+      res.status(401).send({
+          message: "UnAuthorized Token",
+      });
+  }
+});
+
 export default router;
