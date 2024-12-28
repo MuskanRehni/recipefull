@@ -1,149 +1,273 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import './AddRecipe.css'; // Assuming you have a separate CSS file for styling
 
 const AddRecipe = () => {
   const [formData, setFormData] = useState({
-    recipeName: "",
-    ingredients: "",
-    instructions: "",
-    prepTime: "",
-    cookTime: "",
-    servings: 0,
-    category: "",
-    cuisine: "",
-    difficulty: "",
-    imageFile: null,
+    recipeName: '',
+    ingredients: [],
+    instructions: '',
+    prepTime: '',
+    cookTime: '',
+    totalTime: '',
+    servings: '',
+    category: '',
+    cuisine: '',
+    difficulty: '',
+    nutritionalInfo: {
+      calories: '',
+      protein: '',
+      fat: '',
+      carbohydrates: '',
+    },
+    image: null, // To store uploaded image
+    createdBy: '',
   });
 
-  // Handle form field changes
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Automatically adjust textarea height
-  const autoResize = (e) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
-
-  // Handle image upload
-  const handleImageUpload = (e) => {
-    setFormData({ ...formData, imageFile: e.target.files[0] });
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const recipeData = new FormData();
-    recipeData.append("recipeName", formData.recipeName);
-    recipeData.append("ingredients", formData.ingredients);
-    recipeData.append("instructions", formData.instructions);
-    recipeData.append("prepTime", formData.prepTime);
-    recipeData.append("cookTime", formData.cookTime);
-    recipeData.append("servings", formData.servings);
-    recipeData.append("category", formData.category);
-    recipeData.append("cuisine", formData.cuisine);
-    recipeData.append("difficulty", formData.difficulty);
-    recipeData.append("image", formData.imageFile);
-
-    console.log("Form submitted:", formData);
-
-    // Show alert message
-    alert("Your recipe has been added successfully!");
-
-    // Reset the form fields after submission
+  const handleNestedInputChange = (e, parentKey) => {
+    const { name, value } = e.target;
     setFormData({
-      recipeName: "",
-      ingredients: "",
-      instructions: "",
-      prepTime: "",
-      cookTime: "",
-      servings: 0,
-      category: "",
-      cuisine: "",
-      difficulty: "",
-      imageFile: null,
+      ...formData,
+      [parentKey]: { ...formData[parentKey], [name]: value },
     });
   };
 
+  const handleAddIngredient = () => {
+    setFormData({
+      ...formData,
+      ingredients: [...formData.ingredients, { name: '', quantity: '' }],
+    });
+  };
+
+  const handleIngredientChange = (index, field, value) => {
+    const updatedIngredients = formData.ingredients.map((ingredient, i) =>
+      i === index ? { ...ingredient, [field]: value } : ingredient
+    );
+    setFormData({ ...formData, ingredients: updatedIngredients });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, image: URL.createObjectURL(file) });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
+    try {
+      const response = await fetch('http://localhost:5000/api/user/add', {
+        method: 'POST', // Use POST to send form data
+        headers: {
+          'Content-Type': 'application/json', // Specify JSON content type
+        },
+        body: JSON.stringify(formData), // Send form data as JSON
+      });
+
+      if (response.ok) {
+        const data = await response.json(); // Parse JSON response
+        alert('Recipe added successfully!'); // Show success message
+        console.log('Response:', data); // Log the server response
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error}`); // Show error message
+        console.log('Error Response:', errorData);
+      }
+    } catch (error) {
+      console.error('Error connecting to backend:', error);
+      alert('An error occurred while adding the recipe.');
+    }
+  };
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full max-w-4xl p-8 bg-white rounded shadow-md">
-        <h2 className="text-3xl font-bold mb-6 text-center">Add Your Recipe</h2>
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          {/* Recipe Name */}
-          <div className="mb-6">
-            <label className="block mb-2 font-medium">Recipe Name</label>
+    <form onSubmit={handleSubmit} className="recipe-form">
+      <h1>Add Recipe</h1>
+      <div className="form-group">
+        <label>Recipe Name:</label>
+        <input
+          type="text"
+          name="recipeName"
+          value={formData.recipeName}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Ingredients:</label>
+        {formData.ingredients.map((ingredient, index) => (
+          <div key={index} className="ingredient-group">
             <input
               type="text"
-              name="recipeName"
-              className="w-full p-3 border rounded"
-              placeholder="Enter recipe name"
-              value={formData.recipeName}
-              onChange={handleChange}
-              required
+              placeholder="Ingredient Name"
+              value={ingredient.name}
+              onChange={(e) => handleIngredientChange(index, 'name', e.target.value)}
+              className="ingredient-input"
             />
-          </div>
-
-          {/* Ingredients */}
-          <div className="mb-6">
-            <label className="block mb-2 font-medium">Ingredients</label>
-            <textarea
-              name="ingredients"
-              value={formData.ingredients}
-              onChange={(e) => {
-                handleChange(e);
-                autoResize(e);
-              }}
-              placeholder="Add ingredients, one per line..."
-              rows="3"
-              className="w-full p-3 border rounded resize-none"
-              required
-            ></textarea>
-            <small className="text-gray-500">Enter one ingredient per line.</small>
-          </div>
-
-          {/* Instructions */}
-          <div className="mb-6">
-            <label className="block mb-2 font-medium">Instructions</label>
-            <textarea
-              name="instructions"
-              value={formData.instructions}
-              onChange={(e) => {
-                handleChange(e);
-                autoResize(e);
-              }}
-              placeholder="Add instructions, one step per line..."
-              rows="3"
-              className="w-full p-3 border rounded resize-none"
-              required
-            ></textarea>
-            <small className="text-gray-500">Enter one step per line.</small>
-          </div>
-
-          {/* Image Upload */}
-          <div className="mb-6">
-            <label className="block mb-2 font-medium">Upload Recipe Image</label>
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="w-full p-3 border rounded"
-              required
+              type="text"
+              placeholder="Quantity"
+              value={ingredient.quantity}
+              onChange={(e) => handleIngredientChange(index, 'quantity', e.target.value)}
+              className="ingredient-input"
             />
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-3 rounded hover:bg-green-600"
-          >
-            Submit Recipe
-          </button>
-        </form>
+        ))}
+        <button type="button" onClick={handleAddIngredient} className="add-ingredient-btn">
+          Add Ingredient
+        </button>
       </div>
-    </div>
+      <div className="form-group">
+        <label>Instructions:</label>
+        <textarea
+          name="instructions"
+          value={formData.instructions}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Prep Time:</label>
+        <input
+          type="text"
+          name="prepTime"
+          value={formData.prepTime}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Cook Time:</label>
+        <input
+          type="text"
+          name="cookTime"
+          value={formData.cookTime}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Total Time:</label>
+        <input
+          type="text"
+          name="totalTime"
+          value={formData.totalTime}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Servings:</label>
+        <input
+          type="number"
+          name="servings"
+          value={formData.servings}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Category:</label>
+        <input
+          type="text"
+          name="category"
+          value={formData.category}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Cuisine:</label>
+        <input
+          type="text"
+          name="cuisine"
+          value={formData.cuisine}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Difficulty:</label>
+        <input
+          type="text"
+          name="difficulty"
+          value={formData.difficulty}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Calories:</label>
+        <input
+          type="number"
+          name="calories"
+          value={formData.nutritionalInfo.calories}
+          onChange={(e) => handleNestedInputChange(e, 'nutritionalInfo')}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Protein:</label>
+        <input
+          type="number"
+          name="protein"
+          value={formData.nutritionalInfo.protein}
+          onChange={(e) => handleNestedInputChange(e, 'nutritionalInfo')}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Fat:</label>
+        <input
+          type="number"
+          name="fat"
+          value={formData.nutritionalInfo.fat}
+          onChange={(e) => handleNestedInputChange(e, 'nutritionalInfo')}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Carbohydrates:</label>
+        <input
+          type="number"
+          name="carbohydrates"
+          value={formData.nutritionalInfo.carbohydrates}
+          onChange={(e) => handleNestedInputChange(e, 'nutritionalInfo')}
+          className="form-input"
+        />
+      </div>
+      <div className="form-group">
+        <label>Upload Image:</label>
+        <input
+          type="file"
+          name="image"
+          onChange={handleImageChange}
+          className="form-input"
+        />
+        {formData.image && (
+          <div className="image-preview">
+            <img src={formData.image} alt="Uploaded Preview" />
+          </div>
+        )}
+      </div>
+      <div className="form-group">
+        <label>Created By:</label>
+        <input
+          type="text"
+          name="createdBy"
+          value={formData.createdBy}
+          onChange={handleInputChange}
+          className="form-input"
+        />
+      </div>
+      <button type="submit" className="submit-btn">
+        Add Recipe
+      </button>
+    </form>
   );
 };
 
