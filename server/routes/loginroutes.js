@@ -47,8 +47,6 @@ router.post("/verifyToken", async (req, res) => {
   try {
       const { token } = req.body;
 
-      console.log("Verify Token ", token);
-
       const validity = jwt.verify(token, process.env.JWT_SECRET);
 
       if (!validity) {
