@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "lucide-react": "^0.383.0",
@@ -32,13 +33,10 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.0"
-    
   },
   "description": "![Demo App](/public/Screenshot_29.png)",
   "main": "postcss.config.js",
   "keywords": [],
   "author": "",
   "license": "ISC"
-  
-  
 }
