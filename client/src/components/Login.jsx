@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../lib/constants';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,11 +15,11 @@ const Login = () => {
     e.preventDefault();
     try {
       if (isLogin) {
-        const { data }  = await axios.post('http://localhost:5000/api/users/login', { email, password });
+        const { data }  = await axios.post(`${API_URL}/api/users/login`, { email, password });
         localStorage.setItem('authToken', data.token); // Save JWT token to local storage
         navigate('/'); // Redirect to home page after login
       } else {
-        await axios.post('http://localhost:5000/api/users/register', { email, password, firstName, lastName });
+        await axios.post(`${API_URL}/api/users/register`, { email, password, firstName, lastName });
         setIsLogin(true); // Switch to login form after successful signup
       }
     } catch (error) {
