@@ -19,6 +19,7 @@ const HomePage = () => {
 
             const response = await axios.get(`${API_URL}/api/user/all`, {
                 withCredentials:true,
+                headers:{"Content-Type":"application/json"}
             });
             
 

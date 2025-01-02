@@ -17,7 +17,9 @@ const Login = () => {
       if (isLogin) {
         const { data }  = await axios.post(`${API_URL}/api/users/login`, 
            { email, password },{
+
             withCredentials:true,
+            headers:{"Content-Type":"application/json"}
            });
 
         localStorage.setItem('authToken', data.token); // Save JWT token to local storage
@@ -25,6 +27,7 @@ const Login = () => {
       } else {
         await axios.post(`${API_URL}/api/users/register`, { email, password, firstName, lastName },{
           withCredentials:true,
+          headers:{"Content-Type":"application/json"}
         });
         setIsLogin(true); // Switch to login form after successful signup
       }

@@ -28,6 +28,7 @@ const ProtectedRoute = ({ children }) => {
                         token: authToken,
                     },{
                         withCredentials:true,
+                        headers:{"Content-Type":"application/json"}
                     }
                 );
 

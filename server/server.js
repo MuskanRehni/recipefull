@@ -13,7 +13,7 @@ app.use("/", (req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin",process.env.CLIENT_URL);
     res.setHeader(
         "Access-Control-Allow-Headers",
-        "*"
+        "Content-type"
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
