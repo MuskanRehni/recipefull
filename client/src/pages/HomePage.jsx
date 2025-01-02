@@ -17,7 +17,10 @@ const HomePage = () => {
         try {
             // Filter recipes based on search query (title or tags)
 
-            const response = await axios.get(`${API_URL}/api/user/all`);
+            const response = await axios.get(`${API_URL}/api/user/all`, {
+                withCredentials:true,
+            });
+            
 
             console.log(response);
 

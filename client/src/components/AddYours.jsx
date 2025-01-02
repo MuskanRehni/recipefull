@@ -118,6 +118,7 @@ const AddRecipe = () => {
 
         try {
             const response = await fetch(`${API_URL}/api/user/add`, {
+                credentials:"include",
                 method: "POST", // Use POST to send form data
                 body: pageData, // Send form data as JSON
             });

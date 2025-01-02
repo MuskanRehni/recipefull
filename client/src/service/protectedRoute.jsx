@@ -24,7 +24,10 @@ const ProtectedRoute = ({ children }) => {
                 const verification = await axios.post(
                     `${API_URL}/api/users/verifyToken`,
                     {
+                        
                         token: authToken,
+                    },{
+                        withCredentials:true,
                     }
                 );
 

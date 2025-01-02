@@ -15,11 +15,17 @@ const Login = () => {
     e.preventDefault();
     try {
       if (isLogin) {
-        const { data }  = await axios.post(`${API_URL}/api/users/login`, { email, password });
+        const { data }  = await axios.post(`${API_URL}/api/users/login`, 
+           { email, password },{
+            withCredentials:true,
+           });
+
         localStorage.setItem('authToken', data.token); // Save JWT token to local storage
         navigate('/'); // Redirect to home page after login
       } else {
-        await axios.post(`${API_URL}/api/users/register`, { email, password, firstName, lastName });
+        await axios.post(`${API_URL}/api/users/register`, { email, password, firstName, lastName },{
+          withCredentials:true,
+        });
         setIsLogin(true); // Switch to login form after successful signup
       }
     } catch (error) {
