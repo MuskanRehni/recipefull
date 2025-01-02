@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../lib/constants";
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
                 console.log("Called");
 
                 const verification = await axios.post(
-                    "http://localhost:5000/api/users/verifyToken",
+                    `${API_URL}/api/users/verifyToken`,
                     {
                         token: authToken,
                     }

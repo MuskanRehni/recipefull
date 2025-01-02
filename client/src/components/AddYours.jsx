@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AddRecipe.css"; // Assuming you have a separate CSS file for styling
+import {API_URL} from "../lib/constants";
 
 const AddRecipe = () => {
     const [formData, setFormData] = useState({
@@ -116,7 +117,7 @@ const AddRecipe = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/user/add", {
+            const response = await fetch(`${API_URL}/api/user/add`, {
                 method: "POST", // Use POST to send form data
                 body: pageData, // Send form data as JSON
             });
