@@ -119,7 +119,7 @@ const AddRecipe = () => {
         try {
             const response = await fetch(`${API_URL}/api/user/add`, {
                 credentials:"include",
-                headers:{"Content-Type":"application/json"},
+                headers:{"Content-Type":"multipart/form-data"},
                 method: "POST", // Use POST to send form data
                 body: pageData, // Send form data as JSON
             });
