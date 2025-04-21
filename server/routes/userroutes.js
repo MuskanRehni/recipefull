@@ -41,9 +41,30 @@ router.post("/add", upload.single("image"), async (req, res) => {
 });
 
 // Get all recipes
+// router.get("/all", async (req, res) => {
+//     try {
+//         const recipes = await Recipe.find();
+//         res.status(200).json(recipes);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });/
+// Get all recipes with optional search
 router.get("/all", async (req, res) => {
     try {
-        const recipes = await Recipe.find();
+        const { search } = req.query;
+
+        // If no search query, return all recipes
+        if (!search) {
+            const recipes = await Recipe.find();
+            return res.status(200).json(recipes);
+        }
+
+        // Search only by recipeName (case-insensitive)
+        const recipes = await Recipe.find({
+            recipeName: { $regex: search, $options: 'i' }
+        });
+
         res.status(200).json(recipes);
     } catch (error) {
         res.status(500).json({ error: error.message });

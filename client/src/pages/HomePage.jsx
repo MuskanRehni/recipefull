@@ -12,19 +12,34 @@ const HomePage = () => {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchRecipes = async () => {
-        setLoading(true);
-        try {
-            // Filter recipes based on search query (title or tags)
+    // const fetchRecipes = async () => {
+    //     setLoading(true);
+    //     try {
+    //         // Filter recipes based on search query (title or tags)
 
-            const response = await axios.get(`${API_URL}/api/user/all`, {
-                withCredentials:true,
-                headers:{"Content-Type":"application/json"}
-            });
+    //         const response = await axios.get(`${API_URL}/api/user/all`, {
+    //             withCredentials:true,
+    //             headers:{"Content-Type":"application/json"}
+    //         });
             
 
-            console.log(response);
+    //         console.log(response);
 
+    //         setRecipes(response.data);
+    //     } catch (error) {
+    //         console.error("Error fetching recipes:", error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    const fetchRecipes = async (query = '') => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`${API_URL}/api/user/all`, {
+                params: { search: query }, // Add search query parameter
+                withCredentials: true,
+                headers: { "Content-Type": "application/json" }
+            });
             setRecipes(response.data);
         } catch (error) {
             console.error("Error fetching recipes:", error);
@@ -32,7 +47,8 @@ const HomePage = () => {
             setLoading(false);
         }
     };
-
+    
+    
     useEffect(() => {
         fetchRecipes(); // Default fetch without filters
     }, []);

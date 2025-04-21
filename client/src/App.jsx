@@ -30,6 +30,14 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="/edit/:id"
+                    element={
+                        <ProtectedRoute>
+                            <AddYours />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     );
